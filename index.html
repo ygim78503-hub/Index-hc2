@@ -7,8 +7,8 @@
     <style>
         :root { --p: #4f46e5; --d: #ef4444; --s: #10b981; }
         * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
-        html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; }
-        #g { background: #fff; width: 100%; max-width: 480px; height: 100dvh; max-height: 900px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0f172a; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; }
+        #g { background: #fff; width: 100%; max-width: 480px; height: 100dvh; max-height: 900px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; box-shadow: 0 10px 30px #0008; position: relative; }
         .hdr { font-size: clamp(12px, 2.5vh, 14px); color: #64748b; font-weight: 700; }
         .sc { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: min(12px, 1.8vh); width: 100%; height: 100%; overflow: hidden; }
         .tt { font-size: clamp(20px, 3.5vh, 24px); font-weight: 800; color: #0f172a; line-height: 1.25; word-break: keep-all; }
@@ -17,34 +17,26 @@
         .tm { font-size: clamp(22px, 4vh, 28px); font-weight: 900; color: var(--d); background: #fef2f2; padding: min(8px, 1.2vh); border-radius: 12px; border: 2px solid #fca5a5; width: 100%; }
         .pb-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
         .pb-fill { height: 100%; background: var(--d); width: 100%; }
-        
-        /* 1단계 드래그 필드 */
         .stage-box { width: 100%; flex: 1; background: #f1f5f9; border-radius: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; border: 2px solid #e2e8f0; }
         .room-area { width: 100%; height: 60%; position: relative; border-bottom: 2px dashed #cbd5e1; display: flex; justify-content: space-around; align-items: center; }
         .inv-area { width: 100%; height: 35%; background: #e2e8f0; border-radius: 12px; display: flex; justify-content: space-around; align-items: center; padding: 5px; }
         .inv-title { position: absolute; bottom: 8px; font-size: 11px; color: #64748b; font-weight: bold; width: 100%; text-align: center; }
-        
-        /* 드래그 요소 스타일 */
+        .trash-can { position: absolute; top: 10px; left: 10px; width: 60px; height: 60px; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 22px; z-index: 10; transition: transform 0.1s, background 0.1s; }
+        .trash-can.hover { background: #fecaca; transform: scale(1.1); }
+        .trash-txt { font-size: 10px; color: var(--d); font-weight: bold; margin-top: 2px; }
         .spot { width: 60px; height: 60px; border: 3px dashed #94a3b8; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
-        .item { font-size: 40px; cursor: grab; position: absolute; z-index: 10; transition: transform 0.1s; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; }
-        .item:active { cursor: grabbing; transform: scale(1.1); }
+        .item { font-size: 40px; cursor: grab; position: absolute; z-index: 20; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; will-change: transform, left, top; }
         .item.old { filter: grayscale(0.8) opacity(0.8); }
-
-        .btn { background: var(--p); color: #fff; font-size: clamp(16px, 2.8vh, 18px); font-weight: 800; border: none; padding: min(14px, 2vh); border-radius: 14px; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); flex-shrink: 0; }
+        .btn { background: var(--p); color: #fff; font-size: clamp(16px, 2.8vh, 18px); font-weight: 800; border: none; padding: min(14px, 2vh); border-radius: 14px; width: 100%; cursor: pointer; box-shadow: 0 4px 12px #4f46e54d; flex-shrink: 0; }
         .btn:active { transform: scale(0.98); }
         .h { display: none !important; }
-
-        /* 튜토리얼 팝업 & 카운트다운 오버레이 */
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .modal-card { background: #fff; width: 100%; max-width: 380px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: pop 0.2s ease-out; }
+        .modal-overlay { position: absolute; inset: 0; background: #0f172ad9; backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .modal-card { background: #fff; width: 100%; max-width: 380px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px #0003; animation: pop 0.2s ease-out; }
         .guide-step { background: #f8fafc; border-radius: 12px; padding: 10px; margin: 10px 0; text-align: left; font-size: 14px; color: #334155; border: 1px solid #e2e8f0; }
         .guide-step span { font-weight: bold; color: var(--p); }
-
-        /* 카운트다운 텍스트 */
-        .cnt-down { font-size: 80px; font-weight: 900; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: pulse 0.8s infinite; }
-
+        .cnt-down { font-size: 80px; font-weight: 900; color: #fff; text-shadow: 0 4px 20px #0008; animation: pulse 0.8s infinite; }
         @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes pulse { 0% { transform: scale(0.8); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
@@ -52,35 +44,28 @@
 <div id="g">
     <div class="hdr">🏢 회천청소년문화의집 번개 미션</div>
 
-    <!-- 1. 스토리 -->
     <div id="s-story" class="sc">
         <div class="bg">🚨 긴급 상황 발생!</div>
         <div class="tt">관장님 오기 전에<br>미리 해결하라!</div>
-        <div class="st">
-            관장님이 오기까지 <strong>단 10초!</strong> 😱<br><br>
-            어지러진 방을 빠르게 정리하고<br>관장님의 인정을 받아내세요!
-        </div>
+        <div class="st">관장님이 오기까지 <strong>단 10초!</strong> 😱<br><br>어지러진 방을 빠르게 정리하고<br>관장님의 인정을 받아내세요!</div>
         <button class="btn" id="btn-start">🔥 미션 시작하기!</button>
     </div>
 
-    <!-- 2. 게임 (1단계) -->
     <div id="s-game" class="sc h">
         <div style="width: 100%;">
             <div id="tm" class="tm">⏰ 10.0초</div>
             <div class="pb-bg"><div id="pb" class="pb-fill"></div></div>
         </div>
         <div class="stage-box" id="stage">
+            <div class="trash-can" id="trash">🗑️<div class="trash-txt">버리는 곳</div></div>
             <div class="room-area" id="room">
-                <div class="spot" id="spot-0"></div>
-                <div class="spot" id="spot-1"></div>
-                <div class="spot" id="spot-2"></div>
+                <div class="spot" id="spot-0"></div><div class="spot" id="spot-1"></div><div class="spot" id="spot-2"></div>
             </div>
             <div class="inv-area" id="inv"></div>
             <div class="inv-title">📦 새 의자 인벤토리 (끌어서 설치)</div>
         </div>
     </div>
 
-    <!-- 3. 결과 -->
     <div id="s-result" class="sc h">
         <div id="res-ico" style="font-size: clamp(48px, 10vh, 64px);"></div>
         <div id="res-tt" class="tt"></div>
@@ -88,73 +73,54 @@
         <button class="btn" id="btn-retry" style="background:#334155;">🔄 다시 도전하기</button>
     </div>
 
-    <!-- 튜토리얼 모달 -->
     <div id="pop-guide" class="modal-overlay h">
         <div class="modal-card">
             <h3 style="margin:0 0 10px 0; color:#0f172a; font-size: 20px;">🎮 1단계: 의자 교체법</h3>
-            <div class="guide-step">
-                1️⃣ <span>헌 의자 치우기:</span><br>낡은 의자를 손가락으로 밀어 <strong>화면 밖으로 던지세요!</strong>
-            </div>
-            <div class="guide-step">
-                2️⃣ <span>새 의자 배치:</span><br>아래 인벤토리에서 <strong>새 의자를 끌어서 점선(선반)</strong>에 놓으세요!
-            </div>
+            <div class="guide-step">1️⃣ <span>헌 의자 버리기:</span><br>낡은 의자를 <strong>왼쪽 상단 쓰레기통🗑️</strong>으로 끌어서 버리세요!</div>
+            <div class="guide-step">2️⃣ <span>새 의자 배치:</span><br>인벤토리의 <strong>새 의자를 끌어서 점선 자리</strong>에 놓으세요!</div>
             <button class="btn" id="btn-ok" style="margin-top:10px;">OK, 이해했어요! 👍</button>
         </div>
     </div>
 
-    <!-- 카운트다운 레이어 -->
-    <div id="pop-count" class="modal-overlay h" style="background: rgba(15, 23, 42, 0.6);">
+    <div id="pop-count" class="modal-overlay h" style="background: #0f172a99;">
         <div id="cnt-num" class="cnt-down">3</div>
     </div>
 </div>
 
 <script>
     (function() {
-        let time = 100, timer = null, playing = false;
-        let oldCleared = 0, newPlaced = 0;
+        let time = 100, timer = null, playing = false, oldCleared = 0, newPlaced = 0;
         const $ = id => document.getElementById(id);
+        const getP = e => e.touches ? e.touches[0] : e;
 
         function show(s) {
             ['s-story', 's-game', 's-result'].forEach(id => $(id).classList.add('h'));
             $(s).classList.remove('h');
         }
 
-        // 1. 스토리 -> 게임 화면 전환 및 튜토리얼 열기
-        function readyGame() {
-            show('s-game');
-            initStage1();
-            $('pop-guide').classList.remove('h'); // 가이드 팝업
-        }
+        function readyGame() { show('s-game'); initStage1(); $('pop-guide').classList.remove('h'); }
 
-        // 2. OK 누르면 카운트다운 실행
         function startCountdown() {
             $('pop-guide').classList.add('h');
             $('pop-count').classList.remove('h');
-
             let count = 3;
             $('cnt-num').innerText = count;
 
             const cntTimer = setInterval(() => {
                 count--;
-                if (count > 0) {
-                    $('cnt-num').innerText = count;
-                } else if (count === 0) {
-                    $('cnt-num').innerText = "GO!";
-                } else {
+                if (count > 0) $('cnt-num').innerText = count;
+                else if (count === 0) $('cnt-num').innerText = "GO!";
+                else {
                     clearInterval(cntTimer);
                     $('pop-count').classList.add('h');
-                    startGameTimer(); // 타이머 시작 및 실제 플레이 허용
+                    startGameTimer();
                 }
             }, 800);
         }
 
-        // 3. 실제 게임 타이머 시작
         function startGameTimer() {
-            playing = true;
-            time = 100;
-            $('tm').innerText = '⏰ 10.0초';
-            $('pb').style.width = '100%';
-
+            playing = true; time = 100;
+            $('tm').innerText = '⏰ 10.0초'; $('pb').style.width = '100%';
             if (timer) clearInterval(timer);
             timer = setInterval(() => {
                 if (--time <= 0) { time = 0; endGame(false); }
@@ -163,178 +129,106 @@
             }, 100);
         }
 
-        // 1단계 게임 세팅
         function initStage1() {
-            playing = false; // 카운트다운 전까지 움직임 방지
-            oldCleared = 0; newPlaced = 0;
-            const room = $('room');
-            const inv = $('inv');
-            const stage = $('stage');
-
+            playing = false; oldCleared = 0; newPlaced = 0;
+            const inv = $('inv'), stage = $('stage');
             document.querySelectorAll('.item').forEach(e => e.remove());
 
-            // 헌 의자 3개 배치
             const spots = [$('spot-0'), $('spot-1'), $('spot-2')];
             spots.forEach((spot) => {
-                spot.innerText = '';
-                spot.classList.remove('filled');
-                const rect = spot.getBoundingClientRect();
-                const stageRect = stage.getBoundingClientRect();
-
+                spot.innerText = ''; spot.classList.remove('filled');
+                const rect = spot.getBoundingClientRect(), stageRect = stage.getBoundingClientRect();
                 const oldItem = document.createElement('div');
-                oldItem.className = 'item old';
-                oldItem.innerText = '🪑';
+                oldItem.className = 'item old'; oldItem.innerText = '🪑';
                 oldItem.style.left = (rect.left - stageRect.left) + 'px';
                 oldItem.style.top = (rect.top - stageRect.top) + 'px';
                 stage.appendChild(oldItem);
-
-                makeThrowable(oldItem, stageRect);
+                makeTrashable(oldItem, stage);
             });
 
-            // 새 의자 3개 인벤토리에 배치
             for (let i = 0; i < 3; i++) {
                 const newItem = document.createElement('div');
-                newItem.className = 'item new';
-                newItem.innerText = '🪑';
+                newItem.className = 'item new'; newItem.innerText = '🪑';
                 newItem.style.position = 'relative';
                 inv.appendChild(newItem);
-
                 makeDraggableToSpot(newItem, stage, spots);
             }
         }
 
-        // 헌 의자 던지기
-        function makeThrowable(el, stageRect) {
-            let startX, startY, initialLeft, initialTop;
-
-            function onStart(e) {
+        function addDragEvents(el, onMove, onEnd) {
+            const start = e => {
                 if (!playing) return;
-                const p = e.touches ? e.touches[0] : e;
-                startX = p.clientX; startY = p.clientY;
-                initialLeft = parseFloat(el.style.left);
-                initialTop = parseFloat(el.style.top);
-
-                window.addEventListener('mousemove', onMove);
-                window.addEventListener('touchmove', onMove, { passive: false });
-                window.addEventListener('mouseup', onEnd);
-                window.addEventListener('touchend', onEnd);
-            }
-
-            function onMove(e) {
-                if (e.preventDefault) e.preventDefault();
-                const p = e.touches ? e.touches[0] : e;
-                const newLeft = initialLeft + (p.clientX - startX);
-                const newTop = initialTop + (p.clientY - startY);
-
-                el.style.left = newLeft + 'px';
-                el.style.top = newTop + 'px';
-
-                if (newLeft < -40 || newLeft > stageRect.width + 10 || newTop < -40 || newTop > stageRect.height + 10) {
-                    el.remove();
-                    cleanupEvents();
-                    oldCleared++;
-                    checkStageComplete();
-                }
-            }
-
-            function onEnd() { cleanupEvents(); }
-            function cleanupEvents() {
-                window.removeEventListener('mousemove', onMove);
-                window.removeEventListener('touchmove', onMove);
-                window.removeEventListener('mouseup', onEnd);
-                window.removeEventListener('touchend', onEnd);
-            }
-
-            el.addEventListener('mousedown', onStart);
-            el.addEventListener('touchstart', onStart, { passive: false });
+                const move = e => { if (e.preventDefault) e.preventDefault(); onMove(getP(e)); };
+                const end = e => {
+                    window.removeEventListener('mousemove', move); window.removeEventListener('touchmove', move);
+                    window.removeEventListener('mouseup', end); window.removeEventListener('touchend', end);
+                    onEnd(getP(e));
+                };
+                window.addEventListener('mousemove', move, { passive: false });
+                window.addEventListener('touchmove', move, { passive: false });
+                window.addEventListener('mouseup', end); window.addEventListener('touchend', end);
+            };
+            el.addEventListener('mousedown', start);
+            el.addEventListener('touchstart', start, { passive: false });
         }
 
-        // 새 의자 드래그 앤 드롭
+        function makeTrashable(el, stage) {
+            let startX, startY, origLeft, origTop;
+            el.addEventListener('mousedown', e => { startX = getP(e).clientX; startY = getP(e).clientY; origLeft = parseFloat(el.style.left); origTop = parseFloat(el.style.top); });
+            el.addEventListener('touchstart', e => { startX = getP(e).clientX; startY = getP(e).clientY; origLeft = parseFloat(el.style.left); origTop = parseFloat(el.style.top); });
+
+            addDragEvents(el, (p) => {
+                el.style.left = (origLeft + p.clientX - startX) + 'px';
+                el.style.top = (origTop + p.clientY - startY) + 'px';
+                $('trash').classList.toggle('hover', isOverlapping(el.getBoundingClientRect(), $('trash').getBoundingClientRect()));
+            }, () => {
+                $('trash').classList.remove('hover');
+                if (isOverlapping(el.getBoundingClientRect(), $('trash').getBoundingClientRect())) {
+                    el.remove(); oldCleared++; checkStageComplete();
+                } else {
+                    el.style.left = origLeft + 'px'; el.style.top = origTop + 'px';
+                }
+            });
+        }
+
         function makeDraggableToSpot(el, stage, spots) {
             let dragProxy;
-
-            function onStart(e) {
-                if (!playing || oldCleared < 3) return; // 헌 의자를 다 안치우면 차단
-                const p = e.touches ? e.touches[0] : e;
-
-                dragProxy = el.cloneNode(true);
-                dragProxy.style.position = 'absolute';
-                dragProxy.style.zIndex = '100';
-
-                const rect = el.getBoundingClientRect();
-                const stageRect = stage.getBoundingClientRect();
-                dragProxy.style.left = (rect.left - stageRect.left) + 'px';
-                dragProxy.style.top = (rect.top - stageRect.top) + 'px';
-
-                stage.appendChild(dragProxy);
-                el.style.visibility = 'hidden';
-
-                window.addEventListener('mousemove', onMove);
-                window.addEventListener('touchmove', onMove, { passive: false });
-                window.addEventListener('mouseup', onEnd);
-                window.addEventListener('touchend', onEnd);
-            }
-
-            function onMove(e) {
-                if (e.preventDefault) e.preventDefault();
-                const p = e.touches ? e.touches[0] : e;
+            addDragEvents(el, (p) => {
+                if (!dragProxy) {
+                    dragProxy = el.cloneNode(true);
+                    dragProxy.style.position = 'absolute'; dragProxy.style.zIndex = '100';
+                    stage.appendChild(dragProxy);
+                    el.style.visibility = 'hidden';
+                }
                 const stageRect = stage.getBoundingClientRect();
                 dragProxy.style.left = (p.clientX - stageRect.left - 30) + 'px';
                 dragProxy.style.top = (p.clientY - stageRect.top - 30) + 'px';
-            }
-
-            function onEnd() {
+            }, () => {
+                if (!dragProxy) return;
                 const proxyRect = dragProxy.getBoundingClientRect();
                 let placed = false;
 
                 spots.forEach(spot => {
                     if (spot.classList.contains('filled')) return;
                     const spotRect = spot.getBoundingClientRect();
-                    const dist = Math.hypot(
-                        (proxyRect.left + 30) - (spotRect.left + 30),
-                        (proxyRect.top + 30) - (spotRect.top + 30)
-                    );
-
-                    if (dist < 50 && !placed) {
-                        spot.innerText = '🪑';
-                        spot.classList.add('filled');
-                        dragProxy.remove();
-                        el.remove();
-                        newPlaced++;
-                        placed = true;
-                        checkStageComplete();
+                    if (Math.hypot((proxyRect.left + 30) - (spotRect.left + 30), (proxyRect.top + 30) - (spotRect.top + 30)) < 50 && !placed) {
+                        spot.innerText = '🪑'; spot.classList.add('filled');
+                        dragProxy.remove(); el.remove(); newPlaced++; placed = true; checkStageComplete();
                     }
                 });
-
-                if (!placed) {
-                    dragProxy.remove();
-                    el.style.visibility = 'visible';
-                }
-                cleanupEvents();
-            }
-
-            function cleanupEvents() {
-                window.removeEventListener('mousemove', onMove);
-                window.removeEventListener('touchmove', onMove);
-                window.removeEventListener('mouseup', onEnd);
-                window.removeEventListener('touchend', onEnd);
-            }
-
-            el.addEventListener('mousedown', onStart);
-            el.addEventListener('touchstart', onStart, { passive: false });
+                if (!placed) { dragProxy.remove(); dragProxy = null; el.style.visibility = 'visible'; }
+            });
         }
 
-        function checkStageComplete() {
-            if (oldCleared === 3 && newPlaced === 3) {
-                endGame(true);
-            }
+        function isOverlapping(r1, r2) {
+            return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
         }
+
+        function checkStageComplete() { if (oldCleared === 3 && newPlaced === 3) endGame(true); }
 
         function endGame(win) {
-            playing = false;
-            if (timer) clearInterval(timer);
+            playing = false; if (timer) clearInterval(timer);
             show('s-result');
-
             $('res-ico').innerText = win ? '👩‍💼✨' : '👩‍💼💢';
             $('res-tt').innerText = win ? '1단계 의자 미션 성공!' : '미션 실패!';
             $('res-tt').style.color = win ? 'var(--s)' : 'var(--d)';
@@ -343,15 +237,15 @@
                 : `<strong>시간 초과! 의자를 다 교체하지 못했습니다...</strong><br><br>관장님: "아직 옛날 의자가 그대로 있잖아?" 😭`;
         }
 
+        bind($('btn-start'), readyGame);
+        bind($('btn-ok'), startCountdown);
+        bind($('btn-retry'), () => show('s-story'));
+
         function bind(el, fn) {
             let touched = false;
             el.addEventListener('touchstart', (e) => { e.preventDefault(); touched = true; fn(); }, { passive: false });
             el.addEventListener('click', () => { if (!touched) fn(); touched = false; });
         }
-
-        bind($('btn-start'), readyGame);
-        bind($('btn-ok'), startCountdown);
-        bind($('btn-retry'), () => show('s-story'));
         document.addEventListener('gesturestart', e => e.preventDefault());
     })();
 </script>
