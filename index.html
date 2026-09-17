@@ -2,214 +2,280 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>회천청소년문화의집 번개 미션</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>회천청소년문화의집 - 번개 미션</title>
     <style>
-        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: none; margin: 0; padding: 0; }
-        html, body { width: 100%; height: 100%; overflow: hidden; background: #0f172a; font-family: system-ui, sans-serif; display: flex; justify-content: center; align-items: center; }
-        #card { background: #fff; width: 100%; max-width: 420px; height: 100vh; max-height: 840px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; position: relative; border-radius: 16px; overflow: hidden; }
-        @media(max-width: 480px){ #card { border-radius: 0; } }
-        .hdr { font-size: 13px; color: #64748b; font-weight: 700; flex-shrink: 0; }
-        .screen { flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: 100%; min-height: 0; gap: 8px; }
-        .title { font-size: 20px; font-weight: 800; color: #0f172a; }
-        .desc { font-size: 13px; color: #334155; line-height: 1.4; background: #f8fafc; padding: 12px; border-radius: 10px; border: 2px dashed #cbd5e1; width: 100%; }
-        .badge { background: #fee2e2; color: #ef4444; font-weight: 800; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
-        .timer { font-size: 20px; font-weight: 900; color: #ef4444; background: #fef2f2; padding: 6px; border-radius: 10px; border: 2px solid #fca5a5; width: 100%; flex-shrink: 0; }
-        .stage { width: 100%; flex: 1; min-height: 0; background: #f1f5f9; border-radius: 12px; position: relative; display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 2px solid #e2e8f0; overflow: hidden; }
-        .room { width: 100%; flex: 1.2; position: relative; border-bottom: 2px dashed #cbd5e1; display: flex; justify-content: space-around; align-items: center; }
-        .trash { position: absolute; top: 2px; left: 2px; width: 48px; height: 48px; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 18px; z-index: 5; font-weight: 800; color: #ef4444; font-size: 9px; }
-        .spot { width: 52px; height: 52px; border: 2px dashed #94a3b8; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 28px; background: rgba(255,255,255,.6); }
-        .inv { width: 100%; flex: 0.8; background: #e2e8f0; border-radius: 10px; display: flex; justify-content: space-around; align-items: center; position: relative; padding: 2px; }
-        .item { font-size: 32px; position: absolute; z-index: 30; width: 52px; height: 52px; display: flex; justify-content: center; align-items: center; cursor: grab; }
-        .desk-grid { width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; }
-        .desk { width: 64px; height: 80px; background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; display: flex; justify-content: center; align-items: center; position: relative; font-size: 24px; }
-        .stain { width: 30px; height: 30px; background: #78350f; border-radius: 50%; position: absolute; display: flex; justify-content: center; align-items: center; }
-        .stain::after { content: '☕'; font-size: 13px; }
-        .btn { background: #4f46e5; color: #fff; font-size: 15px; font-weight: 800; border: none; padding: 12px; border-radius: 12px; width: 100%; cursor: pointer; flex-shrink: 0; }
-        .btn:active { background: #4338ca; }
-        .modal { position: absolute; inset: 0; background: rgba(15,23,42,.85); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 16px; backdrop-filter: blur(4px); }
-        .modal-card { background: #fff; width: 100%; padding: 20px; border-radius: 16px; text-align: center; }
-        .hidden { display: none !important; }
+        :root { --p: #4f46e5; --d: #ef4444; --s: #10b981; }
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0f172a; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; }
+        #g { background: #fff; width: 100%; max-width: 480px; height: 100dvh; max-height: 900px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; box-shadow: 0 10px 30px #0008; position: relative; }
+        .hdr { font-size: clamp(12px, 2.5vh, 14px); color: #64748b; font-weight: 700; }
+        .sc { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: min(12px, 1.8vh); width: 100%; height: 100%; overflow: hidden; }
+        .tt { font-size: clamp(20px, 3.5vh, 24px); font-weight: 800; color: #0f172a; line-height: 1.25; word-break: keep-all; }
+        .st { font-size: clamp(13px, 2.2vh, 15px); color: #334155; line-height: 1.5; background: #f8fafc; padding: min(14px, 2vh); border-radius: 14px; border: 2px dashed #cbd5e1; word-break: keep-all; width: 100%; }
+        .bg { background: #fee2e2; color: var(--d); font-weight: 800; padding: 6px 14px; border-radius: 20px; font-size: clamp(12px, 2vh, 14px); }
+        .tm { font-size: clamp(22px, 4vh, 28px); font-weight: 900; color: var(--d); background: #fef2f2; padding: min(8px, 1.2vh); border-radius: 12px; border: 2px solid #fca5a5; width: 100%; }
+        .pb-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .pb-fill { height: 100%; background: var(--d); width: 100%; }
+        .stage-box { width: 100%; flex: 1; background: #f1f5f9; border-radius: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; border: 2px solid #e2e8f0; }
+        .room-area { width: 100%; height: 60%; position: relative; border-bottom: 2px dashed #cbd5e1; display: flex; justify-content: space-around; align-items: center; }
+        .inv-area { width: 100%; height: 35%; background: #e2e8f0; border-radius: 12px; display: flex; justify-content: space-around; align-items: center; padding: 5px; position: relative; }
+        .inv-title { position: absolute; bottom: 8px; font-size: 11px; color: #64748b; font-weight: bold; width: 100%; text-align: center; }
+        .trash-can { position: absolute; top: 10px; left: 10px; width: 60px; height: 60px; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 22px; z-index: 10; transition: transform 0.1s, background 0.1s; }
+        .trash-can.hover { background: #fecaca; transform: scale(1.1); }
+        .trash-txt { font-size: 10px; color: var(--d); font-weight: bold; margin-top: 2px; }
+        .spot { width: 60px; height: 60px; border: 3px dashed #94a3b8; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
+        .item { font-size: 40px; cursor: grab; position: absolute; z-index: 20; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; will-change: transform, left, top; }
+        .item.old { filter: grayscale(0.8) opacity(0.8); }
+        .desk-container { width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; }
+        .desk { width: 85px; height: 110px; background: #e2e8f0; border: 3px solid #cbd5e1; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .stain { width: 36px; height: 36px; background: #78350f; border-radius: 50%; position: absolute; opacity: 0.85; display: flex; justify-content: center; align-items: center; }
+        .stain::after { content: '☕'; font-size: 18px; opacity: 0.7; }
+        .wipe-progress { position: absolute; bottom: -12px; width: 80%; height: 6px; background: #cbd5e1; border-radius: 3px; overflow: hidden; display: none; }
+        .wipe-progress-bar { height: 100%; background: var(--s); width: 0%; transition: width 0.1s linear; }
+        .btn { background: var(--p); color: #fff; font-size: clamp(16px, 2.8vh, 18px); font-weight: 800; border: none; padding: min(14px, 2vh); border-radius: 14px; width: 100%; cursor: pointer; box-shadow: 0 4px 12px #4f46e54d; flex-shrink: 0; }
+        .btn:active { transform: scale(0.98); }
+        .btn-link { background: #0284c7; box-shadow: 0 4px 12px #0284c74d; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .h { display: none !important; }
+        .modal-overlay { position: absolute; inset: 0; background: #0f172ad9; backdrop-filter: blur(4px); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .modal-card { background: #fff; width: 100%; max-width: 380px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px #0003; animation: pop 0.2s ease-out; }
+        .guide-step { background: #f8fafc; border-radius: 12px; padding: 10px; margin: 10px 0; text-align: left; font-size: 14px; color: #334155; border: 1px solid #e2e8f0; }
+        .guide-step span { font-weight: bold; color: var(--p); }
+        .cnt-down { font-size: 80px; font-weight: 900; color: #fff; text-shadow: 0 4px 20px #0008; animation: pulse 0.8s infinite; }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
-<div id="card">
+
+<div id="g">
     <div class="hdr">🏢 회천청소년문화의집 번개 미션</div>
 
-    <div id="sc-story" class="screen">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-            <div class="badge">🚨 긴급 상황!</div>
-            <div class="title">관장님 오기 전에<br>방을 정리해라!</div>
-        </div>
-        <div class="desc">관장님이 문화의집 시설 점검을 오십니다! 😱<br><br>낡은 시설을 교체하고 깨끗하게 청소해 인정받으세요!</div>
-        <button class="btn" onclick="startG1()">🔥 미션 시작하기!</button>
+    <div id="s-story" class="sc">
+        <div class="bg">🚨 긴급 상황 발생!</div>
+        <div class="tt">관장님 오기 전에<br>미리 해결하라!</div>
+        <div class="st">관장님이 오기까지 <strong>단 몇 초!</strong> 😱<br><br>어지러진 방을 빠르게 정리하고<br>관장님의 인정을 받아내세요!</div>
+        <button class="btn" id="btn-start">🔥 미션 시작하기!</button>
     </div>
 
-    <div id="sc-game" class="screen hidden">
-        <div id="timer" class="timer">⏰ 10.0초</div>
-        <div class="stage" id="stage">
-            <div class="trash" id="trash">🗑️<span>버리는곳</span></div>
-            <div class="room" id="room"></div>
-            <div class="inv" id="inv"></div>
+    <div id="s-game" class="sc h">
+        <div style="width: 100%;">
+            <div id="tm" class="tm">⏰ 10.0초</div>
+            <div class="pb-bg"><div id="pb" class="pb-fill"></div></div>
         </div>
-    </div>
-
-    <div id="sc-res" class="screen hidden">
-        <div id="r-icon" style="font-size:56px; margin-top:10px;"></div>
-        <div id="r-title" class="title"></div>
-        <div id="r-desc" class="desc"></div>
-        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
-            <a id="btn-web" href="https://hcyouth.kr/" target="_blank" class="btn hidden" style="background:#0284c7; text-decoration:none;">🌐 회천청소년문화의집 방문</a>
-            <button class="btn" onclick="show('sc-story')" style="background:#475569;">🔄 다시 도전하기</button>
+        <div class="stage-box" id="stage">
+            <div class="trash-can" id="trash">🗑️<div class="trash-txt">버리는 곳</div></div>
+            <div class="room-area" id="room">
+                <div class="spot" id="spot-0"></div><div class="spot" id="spot-1"></div><div class="spot" id="spot-2"></div>
+            </div>
+            <div class="inv-area" id="inv"></div>
+            <div class="inv-title" id="inv-title">📦 새 의자 인벤토리 (끌어서 설치)</div>
         </div>
     </div>
 
-    <div id="m-g1" class="modal hidden">
+    <div id="s-result" class="sc h">
+        <div id="res-ico" style="font-size: clamp(48px, 10vh, 64px);"></div>
+        <div id="res-tt" class="tt"></div>
+        <div id="res-desc" class="st"></div>
+        <a id="btn-web" href="https://www.양주회천청소년문화의집.kr/" target="_blank" class="btn btn-link h">🌐 회천청소년문화의집 더 알아보기</a>
+        <button class="btn" id="btn-retry" style="background:#334155;">🔄 처음부터 다시 도전</button>
+    </div>
+
+    <div id="pop-guide-1" class="modal-overlay h">
         <div class="modal-card">
-            <h3 style="font-size:18px; margin-bottom:10px;">🎮 1단계: 의자 교체</h3>
-            <p style="font-size:13px; color:#475569; margin-bottom:16px;">1️⃣ 낡은 의자(회색)를 <strong>쓰레기통🗑️</strong>으로 버리세요!<br>2️⃣ 새 의자🪑를 <strong>점선 위치</strong>로 옮기세요!</p>
-            <button class="btn" onclick="countDown()">준비 완료! 👍</button>
+            <h3 style="margin:0 0 10px 0; color:#0f172a; font-size: 20px;">🎮 1단계: 의자 교체법</h3>
+            <div class="guide-step">1️⃣ 낡은 의자를 <strong>상단 쓰레기통🗑️</strong>으로 버리기!</div>
+            <div class="guide-step">2️⃣ 새 의자를 <strong>점선 자리</strong>로 끌어오기!</div>
+            <button class="btn" id="btn-ok-1" style="margin-top:10px;">OK, 이해했어요! 👍</button>
         </div>
     </div>
 
-    <div id="m-g2" class="modal hidden">
+    <div id="pop-guide-2" class="modal-overlay h">
         <div class="modal-card">
-            <h3 style="font-size:18px; margin-bottom:10px;">🧼 2단계: 책상 얼룩 닦기</h3>
-            <p style="font-size:13px; color:#475569; margin-bottom:16px;">⏱️ 제한시간: <strong>20초</strong><br>🧽 <strong>물티슈</strong>를 얼룩 위에 <strong>3초 동안</strong> 대고 닦으세요!</p>
-            <button class="btn" onclick="countDown()">시작하기! 🧽</button>
+            <h3 style="margin:0 0 10px 0; color:#0f172a; font-size: 20px;">🧼 2단계: 책상 얼룩 닦기</h3>
+            <div class="guide-step">⏱️ <span>제한시간:</span> <strong>20초</strong></div>
+            <div class="guide-step">🧼 <strong>물티슈</strong>를 얼룩에 대고 <strong>3초 동안</strong> 문질러 닦으세요!</div>
+            <button class="btn" id="btn-ok-2" style="margin-top:10px;">시작하기! 🧽</button>
         </div>
     </div>
 
-    <div id="m-cnt" class="modal hidden"><div id="c-num" style="font-size:72px; font-weight:900; color:#fff;">3</div></div>
+    <div id="pop-count" class="modal-overlay h" style="background: #0f172a99;">
+        <div id="cnt-num" class="cnt-down">3</div>
+    </div>
 </div>
 
 <script>
-    let curStage = 1, timeLeft = 100, timer = null, active = false;
-    let cleared = 0, placed = 0, cleaned = 0;
+    (function() {
+        let curStage = 1, time = 100, maxTime = 100, timer = null, playing = false;
+        let oldCleared = 0, newPlaced = 0, cleanedStains = 0;
+        const $ = id => document.getElementById(id), getP = e => e.touches ? e.touches[0] : e;
 
-    const $ = id => document.getElementById(id);
-    const getPos = e => e.touches ? e.touches[0] : e;
-    const show = id => { ['sc-story','sc-game','sc-res'].forEach(s => $(s).classList.add('hidden')); $(id).classList.remove('hidden'); };
+        function show(s) { ['s-story', 's-game', 's-result'].forEach(id => $(id).classList.add('h'));$(s).classList.remove('h'); }
+        function ready1() { curStage = 1; show('s-game'); initStage1(); $('pop-guide-1').classList.remove('h'); }
+        function ready2() { curStage = 2; show('s-game'); initStage2(); $('pop-guide-2').classList.remove('h'); }
 
-    function startG1() { curStage = 1; show('sc-game'); init1(); $('m-g1').classList.remove('hidden'); }
-    function startG2() { curStage = 2; show('sc-game'); init2(); $('m-g2').classList.remove('hidden'); }
-
-    function countDown() {
-        $('m-g1').classList.add('hidden'); $('m-g2').classList.add('hidden'); $('m-cnt').classList.remove('hidden');
-        let c = 3; $('c-num').innerText = c;
-        const itv = setInterval(() => {
-            c--;
-            if (c > 0) $('c-num').innerText = c;
-            else if (c === 0) $('c-num').innerText = "GO!";
-            else { clearInterval(itv); $('m-cnt').classList.add('hidden'); startTimer(); }
-        }, 700);
-    }
-
-    function startTimer() {
-        active = true; timeLeft = (curStage === 1) ? 100 : 200;
-        if (timer) clearInterval(timer);
-        timer = setInterval(() => {
-            if (--timeLeft <= 0) { timeLeft = 0; gameOver(false); }
-            $('timer').innerText = `⏰ ${(timeLeft / 10).toFixed(1)}초`;
-        }, 100);
-    }
-
-    function init1() {
-        active = false; cleared = placed = 0; $('trash').style.display = 'flex';
-        $('room').innerHTML = '<div class="spot" id="s0"></div><div class="spot" id="s1"></div><div class="spot" id="s2"></div>';
-        $('inv').innerHTML = ''; document.querySelectorAll('.item').forEach(e => e.remove());
-
-        setTimeout(() => {
-            const stR = $('stage').getBoundingClientRect();
-            [0, 1, 2].forEach(i => {
-                const sp = $('s' + i), r = sp.getBoundingClientRect();
-                const oldI = createItem('🪑', r.left - stR.left + (r.width - 52)/2, r.top - stR.top + (r.height - 52)/2);
-                oldI.style.filter = 'grayscale(1)';
-                bindDrag(oldI, () => { if (overlap(oldI, $('trash'))) { oldI.remove(); cleared++; check1(); } });
-
-                const slot = document.createElement('div'); slot.style.cssText = 'width:52px;height:52px;position:relative;';
-                $('inv').appendChild(slot);
-                const sR = slot.getBoundingClientRect();
-                const newI = createItem('🪑', sR.left - stR.left, sR.top - stR.top);
-                bindDrag(newI, () => { if (overlap(newI, sp) && !sp.innerText) { sp.innerText = '🪑'; newI.remove(); placed++; check1(); } });
-            });
-        }, 40);
-    }
-
-    function check1() { if (cleared === 3 && placed === 3) { clearInterval(timer); startG2(); } }
-
-    function init2() {
-        active = false; cleaned = 0; $('trash').style.display = 'none';
-        $('room').innerHTML = `<div class="desk-grid">${[0,1,2].map(i => `<div class="desk">🪵<div class="stain" id="t${i}"></div></div>`).join('')}</div>`;
-        $('inv').innerHTML = ''; document.querySelectorAll('.item').forEach(e => e.remove());
-
-        setTimeout(() => {
-            const stR = $('stage').getBoundingClientRect();
-            const slot = document.createElement('div'); slot.style.cssText = 'width:52px;height:52px;position:relative;';
-            $('inv').appendChild(slot);
-            const sR = slot.getBoundingClientRect();
-            const wiper = createItem('🧽', sR.left - stR.left, sR.top - stR.top);
-
-            let wTimer = null, curIdx = -1;
-            bindDrag(wiper, () => { clearInterval(wTimer); curIdx = -1; }, (p) => {
-                let found = -1;
-                [0,1,2].forEach(i => { const s = $('t'+i); if (s && s.style.display !== 'none' && overlap(wiper, s)) found = i; });
-                if (found !== curIdx) {
-                    clearInterval(wTimer); curIdx = found;
-                    if (curIdx !== -1) {
-                        let prog = 0;
-                        wTimer = setInterval(() => {
-                            if (++prog >= 30) { clearInterval(wTimer); $('t'+curIdx).style.display = 'none'; if (++cleaned === 3) gameOver(true); }
-                        }, 100);
-                    }
-                }
-            });
-        }, 40);
-    }
-
-    function createItem(txt, left, top) {
-        const el = document.createElement('div'); el.className = 'item'; el.innerText = txt;
-        el.style.left = left + 'px'; el.style.top = top + 'px';
-        $('stage').appendChild(el); return el;
-    }
-
-    function bindDrag(el, onEnd, onMove) {
-        const start = e => {
-            if (!active) return;
-            const p = getPos(e), sX = p.clientX, sY = p.clientY, cL = parseFloat(el.style.left), cT = parseFloat(el.style.top);
-            const move = e => {
-                if (e.preventDefault) e.preventDefault();
-                const cp = getPos(e); el.style.left = (cL + cp.clientX - sX) + 'px'; el.style.top = (cT + cp.clientY - sY) + 'px';
-                if (onMove) onMove(cp);
-            };
-            const end = e => {
-                window.removeEventListener('mousemove', move); window.removeEventListener('touchmove', move);
-                window.removeEventListener('mouseup', end); window.removeEventListener('touchend', end);
-                if (onEnd) onEnd(getPos(e));
-            };
-            window.addEventListener('mousemove', move, {passive:false}); window.addEventListener('touchmove', move, {passive:false});
-            window.addEventListener('mouseup', end); window.addEventListener('touchend', end);
-        };
-        el.addEventListener('mousedown', start); el.addEventListener('touchstart', start, {passive:false});
-    }
-
-    function overlap(a, b) {
-        const r1 = a.getBoundingClientRect(), r2 = b.getBoundingClientRect();
-        return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
-    }
-
-    function gameOver(win) {
-        active = false; clearInterval(timer); show('sc-res');
-        if (win) {
-            $('r-icon').innerText = '👩‍💼✨'; $('r-title').innerText = '미션 성공!'; $('r-title').style.color = '#10b981';
-            $('r-desc').innerHTML = '<strong>시설 교체부터 청소까지 완벽 완료!</strong><br><br>관장님: "문화의집을 깨끗하게 가꿔줘서 고마워요!"';
-            $('btn-web').classList.remove('hidden');
-        } else {
-            $('r-icon').innerText = '👩‍💼💢'; $('r-title').innerText = '미션 실패!'; $('r-title').style.color = '#ef4444';
-            $('r-desc').innerHTML = curStage === 1 ? '<strong>시간 초과! 의자를 못 바꿨습니다...</strong>' : '<strong>시간 초과! 얼룩을 다 못 닦았습니다...</strong>';
-            $('btn-web').classList.add('hidden');
+        function startCountdown() {
+            $('pop-guide-1').classList.add('h'); $('pop-guide-2').classList.add('h');$('pop-count').classList.remove('h');
+            let count = 3; $('cnt-num').innerText = count;
+            const cntTimer = setInterval(() => {
+                count--;
+                if (count > 0) $('cnt-num').innerText = count;
+                else if (count === 0) $('cnt-num').innerText = "GO!";
+                else { clearInterval(cntTimer); $('pop-count').classList.add('h'); startGameTimer(); }
+            }, 800);
         }
-    }
+
+        function startGameTimer() {
+            playing = true; maxTime = (curStage === 1) ? 100 : 200; time = maxTime;
+            $('tm').innerText = `⏰ ${(time / 10).toFixed(1)}초`; $('pb').style.width = '100%';
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                if (--time <= 0) { time = 0; endGame(false); }
+                $('tm').innerText = `⏰ ${(time / 10).toFixed(1)}초`;
+                $('pb').style.width = `${(time / maxTime) * 100}%`;
+            }, 100);
+        }
+
+        function initStage1() {
+            playing = false; oldCleared = 0; newPlaced = 0;
+            $('trash').style.display = 'flex';$('inv-title').innerText = '📦 새 의자 인벤토리 (끌어서 설치)';
+            const room = $('room'), inv = $('inv'), stage =$('stage');
+            room.innerHTML = '<div class="spot" id="spot-0"></div><div class="spot" id="spot-1"></div><div class="spot" id="spot-2"></div>';
+            inv.innerHTML = ''; document.querySelectorAll('.item').forEach(e => e.remove());
+            const spots = [$('spot-0'), $('spot-1'),$('spot-2')];
+            spots.forEach((spot) => {
+                const rect = spot.getBoundingClientRect(), stageRect = stage.getBoundingClientRect();
+                const oldItem = document.createElement('div');
+                oldItem.className = 'item old'; oldItem.innerText = '🪑';
+                oldItem.style.left = (rect.left - stageRect.left) + 'px'; oldItem.style.top = (rect.top - stageRect.top) + 'px';
+                stage.appendChild(oldItem); makeTrashable(oldItem);
+            });
+            for (let i = 0; i < 3; i++) {
+                const newItem = document.createElement('div'); newItem.className = 'item new'; newItem.innerText = '🪑'; newItem.style.position = 'relative';
+                inv.appendChild(newItem); makeDraggableToSpot(newItem, spots);
+            }
+        }
+
+        function initStage2() {
+            playing = false; cleanedStains = 0;
+            $('trash').style.display = 'none';$('inv-title').innerText = '🧽 물티슈 (얼룩 위로 끌고 가서 닦기)';
+            const room = $('room'), inv = $('inv'), stage =$('stage');
+            document.querySelectorAll('.item').forEach(e => e.remove());
+            room.innerHTML = `<div class="desk-container">
+                <div class="desk">🪵<div class="stain" id="stain-0"></div><div class="wipe-progress"><div class="wipe-progress-bar" id="bar-0"></div></div></div>
+                <div class="desk">🪵<div class="stain" id="stain-1"></div><div class="wipe-progress"><div class="wipe-progress-bar" id="bar-1"></div></div></div>
+                <div class="desk">🪵<div class="stain" id="stain-2"></div><div class="wipe-progress"><div class="wipe-progress-bar" id="bar-2"></div></div></div>
+            </div>`;
+            inv.innerHTML = '';
+            const tissue = document.createElement('div'); tissue.className = 'item'; tissue.innerText = '🧽'; tissue.style.position = 'relative';
+            inv.appendChild(tissue); makeWiper(tissue, stage);
+        }
+
+        function addDragEvents(el, onMove, onEnd) {
+            const start = e => {
+                if (!playing) return;
+                const move = e => { if (e.preventDefault) e.preventDefault(); onMove(getP(e)); };
+                const end = e => {
+                    window.removeEventListener('mousemove', move); window.removeEventListener('touchmove', move);
+                    window.removeEventListener('mouseup', end); window.removeEventListener('touchend', end);
+                    onEnd(getP(e));
+                };
+                window.addEventListener('mousemove', move, { passive: false }); window.addEventListener('touchmove', move, { passive: false });
+                window.addEventListener('mouseup', end); window.addEventListener('touchend', end);
+            };
+            el.addEventListener('mousedown', start); el.addEventListener('touchstart', start, { passive: false });
+        }
+
+        function makeTrashable(el) {
+            let startX, startY, origLeft, origTop;
+            el.addEventListener('mousedown', e => { startX = getP(e).clientX; startY = getP(e).clientY; origLeft = parseFloat(el.style.left); origTop = parseFloat(el.style.top); });
+            el.addEventListener('touchstart', e => { startX = getP(e).clientX; startY = getP(e).clientY; origLeft = parseFloat(el.style.left); origTop = parseFloat(el.style.top); });
+            addDragEvents(el, (p) => {
+                el.style.left = (origLeft + p.clientX - startX) + 'px'; el.style.top = (origTop + p.clientY - startY) + 'px';
+                $('trash').classList.toggle('hover', isOverlapping(el.getBoundingClientRect(),$('trash').getBoundingClientRect()));
+            }, () => {
+                $('trash').classList.remove('hover');
+                if (isOverlapping(el.getBoundingClientRect(), $('trash').getBoundingClientRect())) { el.remove(); oldCleared++; if (oldCleared === 3 && newPlaced === 3) { playing = false; clearInterval(timer); ready2(); } }
+                else { el.style.left = origLeft + 'px'; el.style.top = origTop + 'px'; }
+            });
+        }
+
+        function makeDraggableToSpot(el, spots) {
+            let dragProxy;
+            addDragEvents(el, (p) => {
+                if (!dragProxy) { dragProxy = el.cloneNode(true); dragProxy.style.position = 'absolute'; dragProxy.style.zIndex = '100'; $('stage').appendChild(dragProxy); el.style.visibility = 'hidden'; }
+                const stageRect = $('stage').getBoundingClientRect();
+                dragProxy.style.left = (p.clientX - stageRect.left - 30) + 'px'; dragProxy.style.top = (p.clientY - stageRect.top - 30) + 'px';
+            }, () => {
+                if (!dragProxy) return;
+                const proxyRect = dragProxy.getBoundingClientRect(); let placed = false;
+                spots.forEach(spot => {
+                    if (spot.classList.contains('filled')) return;
+                    const spotRect = spot.getBoundingClientRect();
+                    if (Math.hypot((proxyRect.left + 30) - (spotRect.left + 30), (proxyRect.top + 30) - (spotRect.top + 30)) < 50 && !placed) {
+                        spot.innerText = '🪑'; spot.classList.add('filled'); dragProxy.remove(); el.remove(); newPlaced++; placed = true;
+                        if (oldCleared === 3 && newPlaced === 3) { playing = false; clearInterval(timer); ready2(); }
+                    }
+                });
+                if (!placed) { dragProxy.remove(); dragProxy = null; el.style.visibility = 'visible'; }
+            });
+        }
+
+        function makeWiper(el, stage) {
+            let dragProxy, wipingIndex = -1, wipeProgress = [0, 0, 0], wipeInterval = null;
+            addDragEvents(el, (p) => {
+                if (!dragProxy) { dragProxy = el.cloneNode(true); dragProxy.style.position = 'absolute'; dragProxy.style.zIndex = '100'; stage.appendChild(dragProxy); el.style.visibility = 'hidden'; }
+                const stageRect = stage.getBoundingClientRect();
+                dragProxy.style.left = (p.clientX - stageRect.left - 30) + 'px'; dragProxy.style.top = (p.clientY - stageRect.top - 30) + 'px';
+                let currentHover = -1;
+                for (let i = 0; i < 3; i++) {
+                    const stain = $(`stain-${i}`);
+                    if (stain && stain.style.display !== 'none' && isOverlapping(dragProxy.getBoundingClientRect(), stain.getBoundingClientRect())) { currentHover = i; break; }
+                }
+                if (currentHover !== wipingIndex) { stopWiping(); wipingIndex = currentHover; if (wipingIndex !== -1) startWiping(wipingIndex); }
+            }, () => { stopWiping(); if (dragProxy) dragProxy.remove(); dragProxy = null; el.style.visibility = 'visible'; });
+
+            function startWiping(idx) {
+                $(`bar-${idx}`).parentElement.style.display = 'block';
+                wipeInterval = setInterval(() => {
+                    wipeProgress[idx] += 10; $(`bar-${idx}`).style.width = `${(wipeProgress[idx] / 30) * 100}%`;
+                    if (wipeProgress[idx] >= 30) { stopWiping(); $(`stain-${idx}`).style.display = 'none'; $(`bar-${idx}`).parentElement.style.display = 'none'; cleanedStains++; if (cleanedStains === 3) endGame(true); }
+                }, 100);
+            }
+            function stopWiping() {
+                if (wipeInterval) clearInterval(wipeInterval); wipeInterval = null;
+                if (wipingIndex !== -1 && wipeProgress[wipingIndex] < 30) {
+                    wipeProgress[wipingIndex] = 0; const bar = $(`bar-${wipingIndex}`);
+                    if (bar) { bar.style.width = '0%'; bar.parentElement.style.display = 'none'; }
+                }
+                wipingIndex = -1;
+            }
+        }
+
+        function isOverlapping(r1, r2) { return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom); }
+
+        function endGame(win) {
+            playing = false; if (timer) clearInterval(timer);
+            show('s-result');
+            if (win) {
+                $('res-ico').innerText = '👩‍💼✨'; $('res-tt').innerText = '모든 미션 클리어!'; $('res-tt').style.color = 'var(--s)';$('res-desc').innerHTML = `<strong>의자 교체부터 책상 얼룩 제거까지 완벽!</strong><br><br>관장님: "문화의집 관리를 잘 해줘서 고마워요!" 👏`;
+                $('btn-web').classList.remove('h');
+            } else {
+                $('res-ico').innerText = '👩‍💼💢'; $('res-tt').innerText = '미션 실패!'; $('res-tt').style.color = 'var(--d)';$('res-desc').innerHTML = (curStage === 1) ? `<strong>1단계 시간 초과! 의자 교체 실패...</strong>` : `<strong>2단계 시간 초과! 책상 얼룩 제거 실패...</strong>`;
+                $('btn-web').classList.add('h');
+            }
+        }
+
+        function bind(el, fn) {
+            let touched = false;
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); touched = true; fn(); }, { passive: false });
+            el.addEventListener('click', () => { if (!touched) fn(); touched = false; });
+        }
+
+        bind($('btn-start'), ready1); bind($('btn-ok-1'), startCountdown); bind($('btn-ok-2'), startCountdown); bind($('btn-retry'), () => show('s-story'));
+        document.addEventListener('gesturestart', e => e.preventDefault());
+    })();
 </script>
 </body>
 </html>
+
