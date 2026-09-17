@@ -5,596 +5,211 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>회천청소년문화의집 번개 미션</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --danger: #ef4444;
-            --success: #10b981;
-        }
-
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: #0f172a;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #game-card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            max-height: 800px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            border-radius: 16px;
-        }
-
-        @media (max-width: 480px) {
-            #game-card {
-                border-radius: 0;
-                max-height: 100vh;
-            }
-        }
-
-        .header {
-            font-size: 14px;
-            color: #64748b;
-            font-weight: 700;
-        }
-
-        .screen {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.3;
-            word-break: keep-all;
-        }
-
-        .desc-box {
-            font-size: 14px;
-            color: #334155;
-            line-height: 1.5;
-            background: #f8fafc;
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px dashed #cbd5e1;
-            word-break: keep-all;
-            width: 100%;
-        }
-
-        .badge {
-            background: #fee2e2;
-            color: var(--danger);
-            font-weight: 800;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-        }
-
-        .timer {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--danger);
-            background: #fef2f2;
-            padding: 8px;
-            border-radius: 10px;
-            border: 2px solid #fca5a5;
-            width: 100%;
-        }
-
-        /* 게임 스테이지 관찰 영역 */
-        .stage-container {
-            width: 100%;
-            flex: 1;
-            background: #f1f5f9;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
-            border: 2px solid #e2e8f0;
-            margin: 10px 0;
-        }
-
-        .room-area {
-            width: 100%;
-            height: 60%;
-            position: relative;
-            border-bottom: 2px dashed #cbd5e1;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .inv-area {
-            width: 100%;
-            height: 35%;
-            background: #e2e8f0;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            position: relative;
-        }
-
-        .trash-can {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 55px;
-            height: 55px;
-            background: #fee2e2;
-            border: 2px solid #fca5a5;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            z-index: 10;
-        }
-
-        .trash-txt {
-            font-size: 9px;
-            color: var(--danger);
-            font-weight: bold;
-        }
-
-        .spot {
-            width: 55px;
-            height: 55px;
-            border: 2px dashed #94a3b8;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-        }
-
-        .item {
-            font-size: 36px;
-            position: absolute;
-            z-index: 20;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: grab;
-        }
-
-        /* 2단계 책상 레이아웃 */
-        .desk-grid {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .desk {
-            width: 75px;
-            height: 95px;
-            background: #e2e8f0;
-            border: 2px solid #cbd5e1;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            font-size: 28px;
-        }
-
-        .stain {
-            width: 32px;
-            height: 32px;
-            background: #78350f;
-            border-radius: 50%;
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .stain::after {
-            content: '☕';
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .btn {
-            background: var(--primary);
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 800;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            width: 100%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-            flex-shrink: 0;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .modal {
-            position: absolute;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.85);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background: #ffffff;
-            width: 100%;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: none; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #0f172a; font-family: system-ui, sans-serif; display: flex; justify-content: center; align-items: center; }
+        #card { background: #fff; width: 100%; max-width: 420px; height: 100vh; max-height: 840px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; position: relative; border-radius: 16px; overflow: hidden; }
+        @media(max-width: 480px){ #card { border-radius: 0; } }
+        .hdr { font-size: 13px; color: #64748b; font-weight: 700; flex-shrink: 0; }
+        .screen { flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: 100%; min-height: 0; gap: 8px; }
+        .title { font-size: 20px; font-weight: 800; color: #0f172a; }
+        .desc { font-size: 13px; color: #334155; line-height: 1.4; background: #f8fafc; padding: 12px; border-radius: 10px; border: 2px dashed #cbd5e1; width: 100%; }
+        .badge { background: #fee2e2; color: #ef4444; font-weight: 800; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .timer { font-size: 20px; font-weight: 900; color: #ef4444; background: #fef2f2; padding: 6px; border-radius: 10px; border: 2px solid #fca5a5; width: 100%; flex-shrink: 0; }
+        .stage { width: 100%; flex: 1; min-height: 0; background: #f1f5f9; border-radius: 12px; position: relative; display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 2px solid #e2e8f0; overflow: hidden; }
+        .room { width: 100%; flex: 1.2; position: relative; border-bottom: 2px dashed #cbd5e1; display: flex; justify-content: space-around; align-items: center; }
+        .trash { position: absolute; top: 2px; left: 2px; width: 48px; height: 48px; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 18px; z-index: 5; font-weight: 800; color: #ef4444; font-size: 9px; }
+        .spot { width: 52px; height: 52px; border: 2px dashed #94a3b8; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 28px; background: rgba(255,255,255,.6); }
+        .inv { width: 100%; flex: 0.8; background: #e2e8f0; border-radius: 10px; display: flex; justify-content: space-around; align-items: center; position: relative; padding: 2px; }
+        .item { font-size: 32px; position: absolute; z-index: 30; width: 52px; height: 52px; display: flex; justify-content: center; align-items: center; cursor: grab; }
+        .desk-grid { width: 100%; height: 100%; display: flex; justify-content: space-around; align-items: center; }
+        .desk { width: 64px; height: 80px; background: #fff; border: 2px solid #cbd5e1; border-radius: 10px; display: flex; justify-content: center; align-items: center; position: relative; font-size: 24px; }
+        .stain { width: 30px; height: 30px; background: #78350f; border-radius: 50%; position: absolute; display: flex; justify-content: center; align-items: center; }
+        .stain::after { content: '☕'; font-size: 13px; }
+        .btn { background: #4f46e5; color: #fff; font-size: 15px; font-weight: 800; border: none; padding: 12px; border-radius: 12px; width: 100%; cursor: pointer; flex-shrink: 0; }
+        .btn:active { background: #4338ca; }
+        .modal { position: absolute; inset: 0; background: rgba(15,23,42,.85); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 16px; backdrop-filter: blur(4px); }
+        .modal-card { background: #fff; width: 100%; padding: 20px; border-radius: 16px; text-align: center; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
+<div id="card">
+    <div class="hdr">🏢 회천청소년문화의집 번개 미션</div>
 
-<div id="game-card">
-    <div class="header">🏢 회천청소년문화의집 번개 미션</div>
-
-    <!-- 시작 화면 -->
-    <div id="screen-story" class="screen">
-        <div class="badge">🚨 긴급 상황 발생!</div>
-        <div class="title">관장님 오기 전에<br>미리 해결하라!</div>
-        <div class="desc-box">
-            관장님이 시설을 확인하러 오십니다! 😱<br><br>
-            방을 깔끔히 정리해서 성공적으로 미션을 완수하세요!
+    <div id="sc-story" class="screen">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <div class="badge">🚨 긴급 상황!</div>
+            <div class="title">관장님 오기 전에<br>방을 정리해라!</div>
         </div>
-        <button class="btn" onclick="startStage1Guide()">🔥 미션 시작하기!</button>
+        <div class="desc">관장님이 문화의집 시설 점검을 오십니다! 😱<br><br>낡은 시설을 교체하고 깨끗하게 청소해 인정받으세요!</div>
+        <button class="btn" onclick="startG1()">🔥 미션 시작하기!</button>
     </div>
 
-    <!-- 게임 진행 화면 -->
-    <div id="screen-game" class="screen hidden">
+    <div id="sc-game" class="screen hidden">
         <div id="timer" class="timer">⏰ 10.0초</div>
-        <div class="stage-container" id="stage">
-            <div class="trash-can" id="trash">
-                🗑️
-                <div class="trash-txt">버리는 곳</div>
-            </div>
-            <div class="room-area" id="room"></div>
-            <div class="inv-area" id="inv"></div>
+        <div class="stage" id="stage">
+            <div class="trash" id="trash">🗑️<span>버리는곳</span></div>
+            <div class="room" id="room"></div>
+            <div class="inv" id="inv"></div>
         </div>
     </div>
 
-    <!-- 결과 화면 -->
-    <div id="screen-result" class="screen hidden">
-        <div id="res-icon" style="font-size: 56px;"></div>
-        <div id="res-title" class="title"></div>
-        <div id="res-desc" class="desc-box"></div>
-        <a id="btn-web" href="https://hcyouth.kr/" target="_blank" class="btn hidden" style="background:#0284c7; text-decoration:none; display:block; margin-bottom:8px;">🌐 회천청소년문화의집 사이트 방문</a>
-        <button class="btn" onclick="showScreen('screen-story')" style="background:#475569;">🔄 다시 도전하기</button>
+    <div id="sc-res" class="screen hidden">
+        <div id="r-icon" style="font-size:56px; margin-top:10px;"></div>
+        <div id="r-title" class="title"></div>
+        <div id="r-desc" class="desc"></div>
+        <div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+            <a id="btn-web" href="https://hcyouth.kr/" target="_blank" class="btn hidden" style="background:#0284c7; text-decoration:none;">🌐 회천청소년문화의집 방문</a>
+            <button class="btn" onclick="show('sc-story')" style="background:#475569;">🔄 다시 도전하기</button>
+        </div>
     </div>
 
-    <!-- 1단계 안내 모달 -->
-    <div id="modal-g1" class="modal hidden">
+    <div id="m-g1" class="modal hidden">
         <div class="modal-card">
-            <h3>🎮 1단계: 의자 교체</h3>
-            <p style="font-size: 14px; color: #475569; line-height: 1.5;">
-                1️⃣ 낡은 의자를 <strong>쓰레기통🗑️</strong>에 버리세요!<br>
-                2️⃣ 새 의자를 <strong>점선 위치</strong>로 끌어오세요!
-            </p>
-            <button class="btn" onclick="startCountdown()">이해했습니다! 👍</button>
+            <h3 style="font-size:18px; margin-bottom:10px;">🎮 1단계: 의자 교체</h3>
+            <p style="font-size:13px; color:#475569; margin-bottom:16px;">1️⃣ 낡은 의자(회색)를 <strong>쓰레기통🗑️</strong>으로 버리세요!<br>2️⃣ 새 의자🪑를 <strong>점선 위치</strong>로 옮기세요!</p>
+            <button class="btn" onclick="countDown()">준비 완료! 👍</button>
         </div>
     </div>
 
-    <!-- 2단계 안내 모달 -->
-    <div id="modal-g2" class="modal hidden">
+    <div id="m-g2" class="modal hidden">
         <div class="modal-card">
-            <h3>🧼 2단계: 책상 얼룩 닦기</h3>
-            <p style="font-size: 14px; color: #475569; line-height: 1.5;">
-                ⏱️ 제한시간: <strong>20초</strong><br>
-                🧽 <strong>물티슈</strong>를 얼룩 위에 대고 <strong>3초 동안</strong> 문지르세요!
-            </p>
-            <button class="btn" onclick="startCountdown()">시작하기! 🧽</button>
+            <h3 style="font-size:18px; margin-bottom:10px;">🧼 2단계: 책상 얼룩 닦기</h3>
+            <p style="font-size:13px; color:#475569; margin-bottom:16px;">⏱️ 제한시간: <strong>20초</strong><br>🧽 <strong>물티슈</strong>를 얼룩 위에 <strong>3초 동안</strong> 대고 닦으세요!</p>
+            <button class="btn" onclick="countDown()">시작하기! 🧽</button>
         </div>
     </div>
 
-    <!-- 카운트다운 모달 -->
-    <div id="modal-count" class="modal hidden">
-        <div id="count-num" style="font-size: 80px; font-weight: 900; color: white;">3</div>
-    </div>
+    <div id="m-cnt" class="modal hidden"><div id="c-num" style="font-size:72px; font-weight:900; color:#fff;">3</div></div>
 </div>
 
 <script>
-    let curStage = 1;
-    let timeLeft = 100;
-    let timerInterval = null;
-    let isPlaying = false;
-
-    let oldCleared = 0;
-    let newPlaced = 0;
-    let cleanedStains = 0;
+    let curStage = 1, timeLeft = 100, timer = null, active = false;
+    let cleared = 0, placed = 0, cleaned = 0;
 
     const $ = id => document.getElementById(id);
     const getPos = e => e.touches ? e.touches[0] : e;
+    const show = id => { ['sc-story','sc-game','sc-res'].forEach(s => $(s).classList.add('hidden')); $(id).classList.remove('hidden'); };
 
-    function showScreen(screenId) {
-        ['screen-story', 'screen-game', 'screen-result'].forEach(id => $(id).classList.add('hidden'));$(screenId).classList.remove('hidden');
+    function startG1() { curStage = 1; show('sc-game'); init1(); $('m-g1').classList.remove('hidden'); }
+    function startG2() { curStage = 2; show('sc-game'); init2(); $('m-g2').classList.remove('hidden'); }
+
+    function countDown() {
+        $('m-g1').classList.add('hidden'); $('m-g2').classList.add('hidden'); $('m-cnt').classList.remove('hidden');
+        let c = 3; $('c-num').innerText = c;
+        const itv = setInterval(() => {
+            c--;
+            if (c > 0) $('c-num').innerText = c;
+            else if (c === 0) $('c-num').innerText = "GO!";
+            else { clearInterval(itv); $('m-cnt').classList.add('hidden'); startTimer(); }
+        }, 700);
     }
 
-    function startStage1Guide() {
-        curStage = 1;
-        showScreen('screen-game');
-        initStage1();
-        $('modal-g1').classList.remove('hidden');
-    }
-
-    function startStage2Guide() {
-        curStage = 2;
-        showScreen('screen-game');
-        initStage2();
-        $('modal-g2').classList.remove('hidden');
-    }
-
-    function startCountdown() {
-        $('modal-g1').classList.add('hidden');
-        $('modal-g2').classList.add('hidden');$('modal-count').classList.remove('hidden');
-
-        let cnt = 3;
-        $('count-num').innerText = cnt;
-
-        const cTimer = setInterval(() => {
-            cnt--;
-            if (cnt > 0) {
-                $('count-num').innerText = cnt;
-            } else if (cnt === 0) {
-                $('count-num').innerText = "GO!";
-            } else {
-                clearInterval(cTimer);
-                $('modal-count').classList.add('hidden');
-                runTimer();
-            }
-        }, 800);
-    }
-
-    function runTimer() {
-        isPlaying = true;
-        timeLeft = (curStage === 1) ? 100 : 200;
-
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            if (timeLeft <= 0) {
-                timeLeft = 0;
-                endGame(false);
-            }
+    function startTimer() {
+        active = true; timeLeft = (curStage === 1) ? 100 : 200;
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => {
+            if (--timeLeft <= 0) { timeLeft = 0; gameOver(false); }
             $('timer').innerText = `⏰ ${(timeLeft / 10).toFixed(1)}초`;
         }, 100);
     }
 
-    /* --- 1단계 로직 --- */
-    function initStage1() {
-        isPlaying = false;
-        oldCleared = 0;
-        newPlaced = 0;
-        $('trash').style.display = 'flex';
+    function init1() {
+        active = false; cleared = placed = 0; $('trash').style.display = 'flex';
+        $('room').innerHTML = '<div class="spot" id="s0"></div><div class="spot" id="s1"></div><div class="spot" id="s2"></div>';
+        $('inv').innerHTML = ''; document.querySelectorAll('.item').forEach(e => e.remove());
 
-        const room = $('room');
-        const inv = $('inv');
-        const stage = $('stage');
-
-        room.innerHTML = '<div class="spot" id="s0"></div><div class="spot" id="s1"></div><div class="spot" id="s2"></div>';
-        inv.innerHTML = '';
-        document.querySelectorAll('.item').forEach(e => e.remove());
-
-        [0, 1, 2].forEach(i => {
-            const spot = $('s' + i);
-            const rect = spot.getBoundingClientRect();
-            const stageRect = stage.getBoundingClientRect();
-
-            // 헌 의자 생성
-            const oldItem = document.createElement('div');
-            oldItem.className = 'item';
-            oldItem.innerText = '🪑';
-            oldItem.style.filter = 'grayscale(1)';
-            oldItem.style.left = (rect.left - stageRect.left) + 'px';
-            oldItem.style.top = (rect.top - stageRect.top) + 'px';
-            stage.appendChild(oldItem);
-
-            bindDrag(oldItem, null, () => {
-                if (isOverlapping(oldItem, $('trash'))) {
-                    oldItem.remove();
-                    oldCleared++;
-                    checkStage1();
-                }
-            });
-
-            // 새 의자 생성
-            const newItem = document.createElement('div');
-            newItem.className = 'item';
-            newItem.innerText = '🪑';
-            newItem.style.position = 'relative';
-            inv.appendChild(newItem);
-
-            bindDrag(newItem, null, () => {
-                if (isOverlapping(newItem, spot) && !spot.innerText) {
-                    spot.innerText = '🪑';
-                    newItem.remove();
-                    newPlaced++;
-                    checkStage1();
-                }
-            });
-        });
-    }
-
-    function checkStage1() {
-        if (oldCleared === 3 && newPlaced === 3) {
-            clearInterval(timerInterval);
-            startStage2Guide();
-        }
-    }
-
-    /* --- 2단계 로직 --- */
-    function initStage2() {
-        isPlaying = false;
-        cleanedStains = 0;
-        $('trash').style.display = 'none';
-
-        const room = $('room');
-        const inv = $('inv');
-        const stage = $('stage');
-
-        room.innerHTML = `
-            <div class="desk-grid">
-                <div class="desk">🪵<div class="stain" id="t0"></div></div>
-                <div class="desk">🪵<div class="stain" id="t1"></div></div>
-                <div class="desk">🪵<div class="stain" id="t2"></div></div>
-            </div>
-        `;
-        inv.innerHTML = '';
-        document.querySelectorAll('.item').forEach(e => e.remove());
-
-        const wiper = document.createElement('div');
-        wiper.className = 'item';
-        wiper.innerText = '🧽';
-        wiper.style.position = 'relative';
-        inv.appendChild(wiper);
-
-        let wipeTimer = null;
-        let currentIdx = -1;
-
-        bindDrag(wiper, (pos) => {
-            let foundIdx = -1;
+        setTimeout(() => {
+            const stR = $('stage').getBoundingClientRect();
             [0, 1, 2].forEach(i => {
-                const stain = $('t' + i);
-                if (stain && stain.style.display !== 'none' && isOverlapping(wiper, stain)) {
-                    foundIdx = i;
-                }
-            });
+                const sp = $('s' + i), r = sp.getBoundingClientRect();
+                const oldI = createItem('🪑', r.left - stR.left + (r.width - 52)/2, r.top - stR.top + (r.height - 52)/2);
+                oldI.style.filter = 'grayscale(1)';
+                bindDrag(oldI, () => { if (overlap(oldI, $('trash'))) { oldI.remove(); cleared++; check1(); } });
 
-            if (foundIdx !== currentIdx) {
-                clearInterval(wipeTimer);
-                currentIdx = foundIdx;
-                if (currentIdx !== -1) {
-                    let prog = 0;
-                    wipeTimer = setInterval(() => {
-                        prog++;
-                        if (prog >= 30) { // 3초
-                            clearInterval(wipeTimer);
-                            $('t' + currentIdx).style.display = 'none';
-                            cleanedStains++;
-                            if (cleanedStains === 3) endGame(true);
-                        }
-                    }, 100);
-                }
-            }
-        }, () => {
-            clearInterval(wipeTimer);
-            currentIdx = -1;
-        });
+                const slot = document.createElement('div'); slot.style.cssText = 'width:52px;height:52px;position:relative;';
+                $('inv').appendChild(slot);
+                const sR = slot.getBoundingClientRect();
+                const newI = createItem('🪑', sR.left - stR.left, sR.top - stR.top);
+                bindDrag(newI, () => { if (overlap(newI, sp) && !sp.innerText) { sp.innerText = '🪑'; newI.remove(); placed++; check1(); } });
+            });
+        }, 40);
     }
 
-    /* --- 드래그 공통 함수 --- */
-    function bindDrag(el, onMove, onEnd) {
-        let startX, startY, origLeft, origTop;
+    function check1() { if (cleared === 3 && placed === 3) { clearInterval(timer); startG2(); } }
 
-        const onStart = e => {
-            if (!isPlaying) return;
-            const p = getPos(e);
-            startX = p.clientX;
-            startY = p.clientY;
-            origLeft = parseFloat(el.style.left) || 0;
-            origTop = parseFloat(el.style.top) || 0;
+    function init2() {
+        active = false; cleaned = 0; $('trash').style.display = 'none';
+        $('room').innerHTML = `<div class="desk-grid">${[0,1,2].map(i => `<div class="desk">🪵<div class="stain" id="t${i}"></div></div>`).join('')}</div>`;
+        $('inv').innerHTML = ''; document.querySelectorAll('.item').forEach(e => e.remove());
 
+        setTimeout(() => {
+            const stR = $('stage').getBoundingClientRect();
+            const slot = document.createElement('div'); slot.style.cssText = 'width:52px;height:52px;position:relative;';
+            $('inv').appendChild(slot);
+            const sR = slot.getBoundingClientRect();
+            const wiper = createItem('🧽', sR.left - stR.left, sR.top - stR.top);
+
+            let wTimer = null, curIdx = -1;
+            bindDrag(wiper, () => { clearInterval(wTimer); curIdx = -1; }, (p) => {
+                let found = -1;
+                [0,1,2].forEach(i => { const s = $('t'+i); if (s && s.style.display !== 'none' && overlap(wiper, s)) found = i; });
+                if (found !== curIdx) {
+                    clearInterval(wTimer); curIdx = found;
+                    if (curIdx !== -1) {
+                        let prog = 0;
+                        wTimer = setInterval(() => {
+                            if (++prog >= 30) { clearInterval(wTimer); $('t'+curIdx).style.display = 'none'; if (++cleaned === 3) gameOver(true); }
+                        }, 100);
+                    }
+                }
+            });
+        }, 40);
+    }
+
+    function createItem(txt, left, top) {
+        const el = document.createElement('div'); el.className = 'item'; el.innerText = txt;
+        el.style.left = left + 'px'; el.style.top = top + 'px';
+        $('stage').appendChild(el); return el;
+    }
+
+    function bindDrag(el, onEnd, onMove) {
+        const start = e => {
+            if (!active) return;
+            const p = getPos(e), sX = p.clientX, sY = p.clientY, cL = parseFloat(el.style.left), cT = parseFloat(el.style.top);
             const move = e => {
                 if (e.preventDefault) e.preventDefault();
-                const curP = getPos(e);
-                el.style.left = (origLeft + curP.clientX - startX) + 'px';
-                el.style.top = (origTop + curP.clientY - startY) + 'px';
-                if (onMove) onMove(curP);
+                const cp = getPos(e); el.style.left = (cL + cp.clientX - sX) + 'px'; el.style.top = (cT + cp.clientY - sY) + 'px';
+                if (onMove) onMove(cp);
             };
-
             const end = e => {
-                window.removeEventListener('mousemove', move);
-                window.removeEventListener('touchmove', move);
-                window.removeEventListener('mouseup', end);
-                window.removeEventListener('touchend', end);
+                window.removeEventListener('mousemove', move); window.removeEventListener('touchmove', move);
+                window.removeEventListener('mouseup', end); window.removeEventListener('touchend', end);
                 if (onEnd) onEnd(getPos(e));
             };
-
-            window.addEventListener('mousemove', move, { passive: false });
-            window.addEventListener('touchmove', move, { passive: false });
-            window.addEventListener('mouseup', end);
-            window.addEventListener('touchend', end);
+            window.addEventListener('mousemove', move, {passive:false}); window.addEventListener('touchmove', move, {passive:false});
+            window.addEventListener('mouseup', end); window.addEventListener('touchend', end);
         };
-
-        el.addEventListener('mousedown', onStart);
-        el.addEventListener('touchstart', onStart, { passive: false });
+        el.addEventListener('mousedown', start); el.addEventListener('touchstart', start, {passive:false});
     }
 
-    function isOverlapping(elA, elB) {
-        const r1 = elA.getBoundingClientRect();
-        const r2 = elB.getBoundingClientRect();
+    function overlap(a, b) {
+        const r1 = a.getBoundingClientRect(), r2 = b.getBoundingClientRect();
         return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
     }
 
-    function endGame(win) {
-        isPlaying = false;
-        clearInterval(timerInterval);
-        showScreen('screen-result');
-
+    function gameOver(win) {
+        active = false; clearInterval(timer); show('sc-res');
         if (win) {
-            $('res-icon').innerText = '👩‍💼✨';
-            $('res-title').innerText = '모든 미션 성공!';
-            $('res-title').style.color = 'var(--success)';$('res-desc').innerHTML = '<strong>의자 교체부터 책상 청소까지 완벽!</strong><br><br>관장님: "문화의집 정리를 아주 깨끗하게 해줬네요!" 👏';
+            $('r-icon').innerText = '👩‍💼✨'; $('r-title').innerText = '미션 성공!'; $('r-title').style.color = '#10b981';
+            $('r-desc').innerHTML = '<strong>시설 교체부터 청소까지 완벽 완료!</strong><br><br>관장님: "문화의집을 깨끗하게 가꿔줘서 고마워요!"';
             $('btn-web').classList.remove('hidden');
         } else {
-            $('res-icon').innerText = '👩‍💼💢';
-            $('res-title').innerText = '미션 실패!';
-            $('res-title').style.color = 'var(--danger)';$('res-desc').innerHTML = (curStage === 1) ? '<strong>시간 초과! 의자 교체에 실패했습니다...</strong>' : '<strong>시간 초과! 책상 얼룩을 다 닦지 못했습니다...</strong>';
+            $('r-icon').innerText = '👩‍💼💢'; $('r-title').innerText = '미션 실패!'; $('r-title').style.color = '#ef4444';
+            $('r-desc').innerHTML = curStage === 1 ? '<strong>시간 초과! 의자를 못 바꿨습니다...</strong>' : '<strong>시간 초과! 얼룩을 다 못 닦았습니다...</strong>';
             $('btn-web').classList.add('hidden');
         }
     }
 </script>
 </body>
 </html>
-
