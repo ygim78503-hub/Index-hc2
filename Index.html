@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>회천청소년문화의집 - 번개 미션</title>
+    <style>
+        :root { --p: #4f46e5; --d: #ef4444; --s: #10b981; }
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0f172a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; }
+        #g { background: #fff; width: 100%; max-width: 480px; height: 100dvh; max-height: 900px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hdr { font-size: clamp(12px, 2.5vh, 14px); color: #64748b; font-weight: 700; }
+        .sc { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: min(15px, 2vh); width: 100%; height: 100%; overflow: hidden; }
+        .tt { font-size: clamp(20px, 4vh, 26px); font-weight: 800; color: #0f172a; line-height: 1.25; word-break: keep-all; }
+        .st { font-size: clamp(13px, 2.3vh, 16px); color: #334155; line-height: 1.5; background: #f8fafc; padding: min(15px, 2vh); border-radius: 14px; border: 2px dashed #cbd5e1; word-break: keep-all; width: 100%; }
+        .bg { background: #fee2e2; color: var(--d); font-weight: 800; padding: 6px 14px; border-radius: 20px; font-size: clamp(12px, 2vh, 14px); }
+        .tm { font-size: clamp(24px, 5vh, 32px); font-weight: 900; color: var(--d); background: #fef2f2; padding: min(10px, 1.5vh); border-radius: 12px; border: 2px solid #fca5a5; width: 100%; }
+        .pb-bg { width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: min(8px, 1vh) 0; }
+        .pb-fill { height: 100%; background: var(--d); width: 100%; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; flex: 1; max-height: 400px; }
+        .card { background: #f8fafc; border: 3px solid #cbd5e1; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; padding: 8px; }
+        .card:active { transform: scale(0.96); background: #e2e8f0; }
+        .card.done { background: #ecfdf5; border-color: var(--s); opacity: 0.5; pointer-events: none; }
+        .ico { font-size: clamp(32px, 8vh, 48px); pointer-events: none; }
+        .txt { font-weight: bold; font-size: clamp(13px, 2.2vh, 16px); pointer-events: none; margin-top: 4px; }
+        .cnt { margin-top: 6px; font-weight: 800; font-size: clamp(12px, 2vh, 14px); color: var(--p); pointer-events: none; }
+        .btn { background: var(--p); color: #fff; font-size: clamp(16px, 2.8vh, 18px); font-weight: 800; border: none; padding: min(14px, 2vh); border-radius: 14px; width: 100%; cursor: pointer; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); flex-shrink: 0; }
+        .btn:active { transform: scale(0.98); }
+        .h { display: none !important; }
+        @media (max-height: 500px) { #g { padding: 8px; } .sc { gap: 6px; } .st { padding: 8px; font-size: 12px; } .tt { font-size: 18px; } .btn { padding: 8px; font-size: 14px; } .ico { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+<div id="g">
+    <div class="hdr">🏢 회천청소년문화의집 번개 미션</div>
+
+    <!-- 1. 스토리 -->
+    <div id="s-story" class="sc">
+        <div class="bg">🚨 긴급 상황 발생!</div>
+        <div class="tt">관장님 오기 전에<br>미리 해결하라!</div>
+        <div class="st">관장님이 점검하러 오시기까지 <strong>단 10초!</strong> 😱<br><br>어지럽혀진 <strong>의자 10개</strong>를 교체하고,<br>더러워진 <strong>책상 10번</strong>을 닦아내세요!</div>
+        <button class="btn" id="btn-start">🔥 미션 시작하기!</button>
+    </div>
+
+    <!-- 2. 게임 -->
+    <div id="s-game" class="sc h">
+        <div style="width: 100%;">
+            <div id="tm" class="tm">⏰ 10.0초</div>
+            <div class="pb-bg"><div id="pb" class="pb-fill"></div></div>
+        </div>
+        <div class="grid">
+            <div id="c-chair" class="card"><div class="ico">🪑</div><div class="txt">의자 교체하기</div><div id="cnt-chair" class="cnt"></div></div>
+            <div id="c-desk" class="card"><div class="ico">🧹</div><div class="txt">책상 닦기</div><div id="cnt-desk" class="cnt"></div></div>
+        </div>
+    </div>
+
+    <!-- 3. 결과 -->
+    <div id="s-result" class="sc h">
+        <div id="res-ico" style="font-size: clamp(48px, 10vh, 64px);"></div>
+        <div id="res-tt" class="tt"></div>
+        <div id="res-desc" class="st"></div>
+        <button class="btn" id="btn-retry" style="background:#334155;">🔄 다시 도전하기</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        let time = 100, timer = null, cnt = { chair: 10, desk: 10 }, playing = false;
+        const $ = id => document.getElementById(id);
+
+        function show(s) {
+            ['s-story', 's-game', 's-result'].forEach(id => $(id).classList.add('h'));
+            $(s).classList.remove('h');
+        }
+
+        function startGame() {
+            if (playing) return;
+            show('s-game');
+            time = 100; cnt = { chair: 10, desk: 10 }; playing = true;
+
+            ['chair', 'desk'].forEach(t => {
+                $(`c-${t}`).classList.remove('done');
+                $(`cnt-${t}`).innerText = `남은 ${t === 'chair' ? '수량: 10개' : '횟수: 10번'}`;
+            });
+            
+            $('tm').innerText = '⏰ 10.0초';
+            $('pb').style.width = '100%';
+
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                if (--time <= 0) { time = 0; endGame(false); }
+                $('tm').innerText = `⏰ ${(time / 10).toFixed(1)}초`;
+                $('pb').style.width = `${time}%`;
+            }, 100);
+        }
+
+        function tap(type) {
+            if (!playing || cnt[type] <= 0) return;
+            cnt[type]--;
+            $(`cnt-${type}`).innerText = cnt[type] === 0 ? '완료! ✨' : `남은 ${type === 'chair' ? '수량' : '횟수'}: ${cnt[type]}${type === 'chair' ? '개' : '번'}`;
+            if (cnt[type] === 0) $(`c-${type}`).classList.add('done');
+            if (cnt.chair === 0 && cnt.desk === 0) endGame(true);
+        }
+
+        function endGame(win) {
+            playing = false;
+            if (timer) clearInterval(timer);
+            show('s-result');
+
+            $('res-ico').innerText = win ? '👩‍💼✨' : '👩‍💼💢';
+            $('res-tt').innerText = win ? '관장님 설득 성공!' : '미션 실패!';
+            $('res-tt').style.color = win ? 'var(--s)' : 'var(--d)';
+            $('res-desc').innerHTML = win 
+                ? `<strong>${((100 - time) / 10).toFixed(1)}초 만에 완벽 정리!</strong><br><br>관장님: "어머, 이렇게 깨끗하다니! 우리 청운위 위원장 최고야!" 👏`
+                : `<strong>시간 초과! 관장님이 도착하셨습니다...</strong><br><br>관장님: "청운위 위원장님... 의자랑 책상이 아직 정리 안 되어 있네요?" 😭`;
+        }
+
+        function bind(el, fn) {
+            let touched = false;
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); touched = true; fn(); }, { passive: false });
+            el.addEventListener('click', () => { if (!touched) fn(); touched = false; });
+        }
+
+        bind($('btn-start'), startGame);
+        bind($('btn-retry'), () => show('s-story'));
+        bind($('c-chair'), () => tap('chair'));
+        bind($('c-desk'), () => tap('desk'));
+        document.addEventListener('gesturestart', e => e.preventDefault());
+    })();
+</script>
+</body>
+</html>
+
